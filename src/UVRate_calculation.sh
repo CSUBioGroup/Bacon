@@ -6,17 +6,14 @@
 # Central South University
 # tangli_csu@csu.edu.cn
 #===============
-# Calculating UV Rate for 
-# peak-based mthods
+# Calculating UV Rate for datasets
 #======================
 # Parameters for running
-# all_bedpe = input bedpe file of all the valid PETs
 # align_file = input the alignment file of PETs (.sam)
 # tmpDir = directory to store tmp files
 
 
-all_bedpe=$1
-align_file=$2
+align_file=$1
 tmpDir=$3
 
 # Picard remove duplication
@@ -38,7 +35,7 @@ samtools view -S -F 0x04 $tmpDir/$prefix.sorted.rmDup.sam > $tmpDir/$prefix.sort
 
 rmdup_bedpe=$tmpDir/$prefix.sorted.rmDup.mapped.sam
 
-all_count=$(awk 'END{print NR}' $all_bedpe)
+all_count=$(awk 'END{print NR}' $align_file)
 rmdup_count=$(awk 'END{print NR}' $rmdup_bedpe)
 
 UVRate=$(echo "scale=4; $rmdup_count/$all_count" | bc)

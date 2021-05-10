@@ -1,8 +1,12 @@
 #!/bin/bash
-# Calculate peak occupancy
-# Created by LiTang
+#===============
+# author: 
+# Li Tang
+# Central South University
 # tangli_csu@csu.edu.cn
-
+#===============
+# Calculate peak occupancy for peak-based methods
+#===============
 # bedtools need to be installed in system path (https://bedtools.readthedocs.io/en/latest/)
 # loop = called loops in bedpe format
 # peak = high quality ChIP-seq/CUT&RUN peak file
