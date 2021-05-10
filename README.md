@@ -4,13 +4,6 @@ A comprehensive computational benchmarking framework for evaluating targeted chr
 
 For more information, see our [Bacon](https://csuligroup.com/Bacon) webpage. 
 
-## Contents
-- [Prerequisites](#What-can-LoopPredictor-do?)
-- [Example usage](#Example-usage)\
- [1. UV Rate Calculation](#1.UV-Rate-Calculation)\
- [2. Predicting loops for unknown cell types](#2.Predicting-loops-for-unknown-cell-types)\
- [3. Customize model for extensive research](#3.Customize-model-for-extensive-research)
-
 ## Prerequisites
 
     [Python](https://www.python.org/)(>=3.4.0), 
