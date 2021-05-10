@@ -8,7 +8,7 @@ For more information, see our [Bacon](https://csuligroup.com/Bacon) webpage.
 
   [Python](https://www.python.org/)(>=3.4.0), 
   [R](https://www.r-project.org/)(>=3.6.2), 
-  [Homer](http://homer.ucsd.edu/homer/),
+  [juicer tool](https://github.com/aidenlab/juicer/wiki/Juicer-Tools-Quick-Start),
   [bedtools](https://bedtools.readthedocs.io/en/latest/index.html)
 
 ## Example usage
