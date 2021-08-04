@@ -11,8 +11,8 @@ For more information, see our [Bacon](https://csuligroup.com/Bacon) webpage.
  [2. PC Calculation](#2.PC-Calculation)\
  [3. ES Calculation](#3.ES-Calculation)\
  [4. ACC Calculation](#4.ACC-Calculation)\
- [5. AR annotation](#5.AR-annotation)\
-- [Trouble shooting](#Trouble-shooting)\
+ [5. AR annotation](#5.AR-annotation)
+- [Trouble shooting](#Trouble-shooting)
 
 ## Prerequisites
 
@@ -66,3 +66,8 @@ AR_annotation.sh /directory_of_loop_folder /AR_annotation/hg19_ccres.bed /AR_ann
 ```
 
 ## Trouble shooting
+* stdin error
+Please unzip all the annotation/loop files before running the script.
+
+* bedtools not found
+Please install bedtools and add the path into system.
