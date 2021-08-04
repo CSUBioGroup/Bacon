@@ -11,15 +11,15 @@ For more information, see our [Bacon](https://csuligroup.com/Bacon) webpage.
  [2. PC Calculation](#2.PC-Calculation)\
  [3. ES Calculation](#3.ES-Calculation)\
  [4. ACC Calculation](#4.ACC-Calculation)\
- [5. AR annotation](#5.AR-annotation)\
-- [Trouble shooting](#Trouble-shooting)\
+ [5. AR annotation](#5.AR-annotation)
+- [Trouble shooting](#Trouble-shooting)
 
 ## Prerequisites
 
-    [Python](https://www.python.org/)(>=3.4.0), 
-    [R](https://www.r-project.org/)(>=3.6.2), 
-    [Homer](http://homer.ucsd.edu/homer/),
-    [bedtools](https://bedtools.readthedocs.io/en/latest/index.html)
+  [Python](https://www.python.org/)(>=3.4.0), 
+  [R](https://www.r-project.org/)(>=3.6.2), 
+  [Homer](http://homer.ucsd.edu/homer/),
+  [bedtools](https://bedtools.readthedocs.io/en/latest/index.html)
 
 ## Example usage
 
@@ -66,3 +66,8 @@ AR_annotation.sh /directory_of_loop_folder /AR_annotation/hg19_ccres.bed /AR_ann
 ```
 
 ## Trouble shooting
+* stdin error
+Please unzip all the annotation/loop files before running the script.
+
+* bedtools not found
+Please install bedtools and add the path into system.
