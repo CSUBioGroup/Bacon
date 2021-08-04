@@ -11,15 +11,20 @@
 #===============
 
 input_loop=$1
-prefix=$2
-golden_sig=${prefix}"_golden_sig.txt"
-golden_nosig1=${prefix}"_golden_nosig1.txt"
-golden_nosig2=${prefix}"_golden_nosig2.txt"
-golden_nosig3=${prefix}"_golden_nosig3.txt"
-out_dir=$3
+gold_dir=$2
+false_dir=$3
+prefix=$4
+golden_sig=${gold_dir}/${prefix}"_gold.bedpe"
+false1=${false_dir}/${prefix}"_false1.bedpe"
+false2=${false_dir}/${prefix}"_false2.bedpe"
+false3=${false_dir}/${prefix}"_false3.bedpe"
+out_dir=$5
 
-# extend golden sig loops to 5kb
-rm $out_dir/results.txt
+if [ -f "$out_dir/${prefix}_results.txt" ]
+then
+    echo "Remove old file..."
+    rm $out_dir/${prefix}_results.txt
+fi
 
 for i in $input_loop/*
 do
@@ -27,67 +32,79 @@ file_name="${i##*/}" &&
 input_num=$(< "$i" wc -l) &&
 sig_num=$(< "$golden_sig" wc -l) &&
 
-intra_num_1=$(awk '{if($1==$4)n=n+1}END{print n}' $i)
+intra_num_1=$(awk -F "\t" '{if($1==$4)n=n+1}END{print n}' $i)
 inter_num_1=$(awk '{if($1!=$4)n=n+1}END{print n}' $i)
 intra_num_2=$(awk '{if($1==$4 && $7>2)n=n+1}END{print n}' $i)
 inter_num_2=$(awk '{if($1!=$4 && $7>2)n=n+1}END{print n}' $i)
-echo "intra_num_1: "$intra_num_1 >> $out_dir/results.txt
-echo "inter_num_1: "$inter_num_1 >> $out_dir/results.txt
-echo "intra_num_2: "$intra_num_2 >> $out_dir/results.txt
-echo "inter_num_2: "$inter_num_2 >> $out_dir/results.txt
 
-awk '{if($1==$4 && $7>3)print $0}' $i > $out_dir/intra_num2.tmp
+echo $file_name"; intra_num_: "$intra_num_1 >> $out_dir/${prefix}_results.txt
 
-awk '{s1=$2-(10000-$3+$2)/2;e1=10000+s1;s2=$5-(10000-$6+$5)/2;e2=10000+s2;printf "%s\t%d\t%d\t%s\t%d\t%d\n",$1,s1,e1,$4,s2,e2}' $golden_sig > $out_dir/$golden_sig.ext.tmp &&
+awk '{if($1==$4)print $0}' $i > $out_dir/intra_num2.tmp
+
+awk '{s1=$2-(10000-$3+$2)/2;e1=10000+s1;s2=$5-(10000-$6+$5)/2;e2=10000+s2;printf "%s\t%d\t%d\t%s\t%d\t%d\n",$1,s1,e1,$4,s2,e2}' $golden_sig > $out_dir/$prefix.gold.ext.tmp &&
 
 # extend loop anchor to 10kb
 awk '{s1=$2-(10000-$3+$2)/2;e1=10000+s1;s2=$5-(10000-$6+$5)/2;e2=10000+s2;if(s1<0)s1=0;if(s2<0)s2=0;printf "%s\t%d\t%d\t%s\t%d\t%d\n",$1,s1,e1,$4,s2,e2}' $out_dir/intra_num2.tmp > $out_dir/$prefix.ext.tmp &&
-if [ "$input_num" -gt "$sig_num" ]
-then
-	sort -r -k 7 -n $out_dir/$prefix.ext.tmp > $out_dir/$prefix.ext.sort.tmp
-	awk -v sig_num="${sig_num}" 'NR<=sig_num{print $0}' $out_dir/$prefix.ext.sort.tmp > $out_dir/$prefix1.ext.tmp 
-else
-	cp $out_dir/$prefix.ext.tmp $out_dir/$prefix1.ext.tmp 
-fi
+#if [ "$input_num" -gt "$sig_num" ]
+#then
+#	sort -r -k 7 -n $out_dir/$prefix.ext.tmp > $out_dir/$prefix.ext.sort.tmp
+#	awk -v sig_num="${sig_num}" 'NR<=sig_num{print $0}' $out_dir/$prefix.ext.sort.tmp > $out_dir/$prefix.1.ext.tmp 
+#else
+cp $out_dir/$prefix.ext.tmp $out_dir/$prefix.1.ext.tmp 
+#fi
 
-pairToPair -type either -a $out_dir/$golden_sig.ext.tmp -b $out_dir/$prefix1.ext.tmp | awk '{print $1"\t"$2"\t"$3}' | sort -u > $out_dir/$prefix.ext.sig.tmp &&
-pairToPair -type either -a $golden_nosig1 -b $out_dir/$prefix1.ext.tmp | awk '{print $1"\t"$2"\t"$3}' | sort -u > $out_dir/$prefix.ext.nosig1.tmp &&
-pairToPair -type either -a $golden_nosig2 -b $out_dir/$prefix1.ext.tmp | awk '{print $1"\t"$2"\t"$3}' | sort -u > $out_dir/$prefix.ext.nosig2.tmp &&
-pairToPair -type either -a $golden_nosig3 -b $out_dir/$prefix1.ext.tmp | awk '{print $1"\t"$2"\t"$3}' | sort -u > $out_dir/$prefix.ext.nosig3.tmp &&
+pairToPair -type both -a $out_dir/$prefix.gold.ext.tmp -b $out_dir/$prefix.1.ext.tmp | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' | sort -u > $out_dir/$prefix.ext.sig.tmp &&
+pairToPair -type both -a $false1 -b $out_dir/$prefix.1.ext.tmp | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > $out_dir/$prefix.ext.false1.tmp &&
+pairToPair -type both -a $false2 -b $out_dir/$prefix.1.ext.tmp | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > $out_dir/$prefix.ext.false2.tmp &&
+pairToPair -type both -a $false3 -b $out_dir/$prefix.1.ext.tmp | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > $out_dir/$prefix.ext.false3.tmp &&
 
-nosig_num=$(< "$golden_nosig1" wc -l) &&
+false_num=sig_num
 TP=$(< "$out_dir/$prefix.ext.sig.tmp" wc -l) &&
-FP=$(echo $sig_num-$TP | bc) &&
-FN_round1=$(< "$out_dir/$prefix.ext.nosig1.tmp" wc -l)
-TN_round1=$(echo $sig_num-$FN_round1 | bc)
-FN_round2=$(< "$out_dir/$prefix.ext.nosig2.tmp" wc -l)
-TN_round2=$(echo $sig_num-$FN_round2 | bc)
-FN_round3=$(< "$out_dir/$prefix.ext.nosig3.tmp" wc -l)
-TN_round3=$(echo $sig_num-$FN_round3 | bc)
-FN_mean=$(((FN_round1+FN_round2+FN_round3)/3))
-TN_mean=$(echo $sig_num-$FN_mean | bc)
+FN=$(echo $sig_num-$TP | bc) &&
+FP_round1=$(< "$out_dir/$prefix.ext.false1.tmp" wc -l)
+TN_round1=$(echo $sig_num-$FP_round1 | bc)
+FP_round2=$(< "$out_dir/$prefix.ext.false2.tmp" wc -l)
+TN_round2=$(echo $sig_num-$FP_round2 | bc)
+FP_round3=$(< "$out_dir/$prefix.ext.false3.tmp" wc -l)
+TN_round3=$(echo $sig_num-$FP_round3 | bc)
+#FP_mean=$(((FP_round1+FP_round2+FP_round3)/3))
+#TN_mean=$(echo $sig_num-$FP_mean | bc)
+####################################################################################
+PPV_1=$(echo "scale=4; $TP/($TP+$FP_round1)" | bc)
+TPR_1=$(echo "scale=4; $TP/($TP+$FN)" | bc)
+Accuracy_1=$(echo "scale=4; ($TP+$TN_round1)/($TP+$FP_round1+$TN_round1+$FN)" | bc)
+####################################################################################
+PPV_2=$(echo "scale=4; $TP/($TP+$FP_round2)" | bc)
+TPR_2=$(echo "scale=4; $TP/($TP+$FN)" | bc)
+Accuracy_2=$(echo "scale=4; ($TP+$TN_round2)/($TP+$FP_round2+$TN_round2+$FN)" | bc)
+####################################################################################
+PPV_3=$(echo "scale=4; $TP/($TP+$FP_round3)" | bc)
+TPR_3=$(echo "scale=4; $TP/($TP+$FN)" | bc)
+Accuracy_3=$(echo "scale=4; ($TP+$TN_round3)/($TP+$FP_round3+$TN_round3+$FN)" | bc)
+####################################################################################
 
-PPV=$(echo "scale=4; $TP/($TP+$FP)" | bc)
-TPR=$(echo "scale=4; $TP/($TP+$FN_mean)" | bc)
-F_score=$(echo "scale=4; 2*$PPV*$TPR/($PPV+$TPR)" | bc)
-tmp=$(echo "scale=4; ($FP+$FN_mean)*0.5" | bc)
-F_score2=$(echo "scale=4; $TP/($TP+$tmp)" | bc)
-Accuracy=$(echo "scale=4; ($TP+$TN_mean)/($TP+$FP+$TN_mean+$FN_mean)" | bc)
+echo "FP_round1:"$FP_round1
+echo "FP_round2:"$FP_round2
+echo "FP_round3:"$FP_round3
+echo "TN_round1:"$TN_round1
+echo "TN_round2:"$TN_round2
+echo "TN_round3:"$TN_round3
+echo "PPV: "$PPV_1
+echo "TPR: "$TPR_1
+echo "Accuracy: "$Accuracy_1
+echo "=============================="
+echo "PPV: "$PPV_2
+echo "TPR: "$TPR_2
+echo "Accuracy: "$Accuracy_2
+echo "=============================="
+echo "PPV: "$PPV_3
+echo "TPR: "$TPR_3
+echo "Accuracy: "$Accuracy_3
+echo "###################################################"
 
-echo "TP: "$TP 
-echo "sig_num: "$sig_num
-echo "FP: "$FP
-echo "FN_mean: "$FN_mean
-echo "TN_mean: "$TN_mean
-
-echo "PPV: "$PPV
-echo "TPR: "$TPR
-echo "tmp: "$tmp
-#echo "F-score: "$F_score
-echo "F-score: "$F_score2
-echo "Accuracy: "$Accuracy
-
-echo -e $file_name"\t"$TP"\t"$FP"\t"$FN_mean"\t"$TN_mean"\t"$PPV"\t"$TPR"\t"$F_score2"\t"$Accuracy >> $out_dir/results.txt &&
+echo -e $TP"\t"$FP_round1"\t"$FN"\t"$TN_round1"\t"$PPV_1"\t"$TPR_1"\t"$Accuracy_1 >> $out_dir/${prefix}_results.txt &&
+echo -e $TP"\t"$FP_round2"\t"$FN"\t"$TN_round2"\t"$PPV_2"\t"$TPR_2"\t"$Accuracy_2 >> $out_dir/${prefix}_results.txt &&
+echo -e $TP"\t"$FP_round3"\t"$FN"\t"$TN_round3"\t"$PPV_3"\t"$TPR_3"\t"$Accuracy_3 >> $out_dir/${prefix}_results.txt &&
 
 rm $out_dir/*.tmp 
 
