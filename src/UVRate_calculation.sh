@@ -14,7 +14,7 @@
 
 
 align_file=$1
-tmpDir=$3
+tmpDir=$2
 
 # Picard remove duplication
 picardCMD="java -jar /tools/picard.jar"
