@@ -16,10 +16,7 @@ For more information, see our [Bacon](https://csuligroup.com/Bacon) webpage.
 
 ## Prerequisites
 
-  [Python](https://www.python.org/)(>=3.4.0), 
-  [R](https://www.r-project.org/)(>=3.6.2), 
-  [Homer](http://homer.ucsd.edu/homer/),
-  [bedtools](https://bedtools.readthedocs.io/en/latest/index.html)
+  [Python](https://www.python.org/)(>=3.4.0), [R](https://www.r-project.org/)(>=3.6.2), [Homer](http://homer.ucsd.edu/homer/), [bedtools](https://bedtools.readthedocs.io/en/latest/index.html)
 
 ## Example usage
 
