@@ -4,6 +4,8 @@ A comprehensive computational benchmarking framework for evaluating targeted chr
 
 For more information, see our [Bacon](https://csuligroup.com/Bacon) webpage. 
 
+Zenodo DOI: [10.5281/zenodo.5607035](https://zenodo.org/record/5607035#.YbVnGX1BwUs).
+
 ## Contents
 - [Prerequisites](#Prerequisites)
 - [Example usage](#Example-usage)
@@ -63,6 +65,7 @@ AR_annotation.sh /directory_of_loop_folder /AR_annotation/hg19_ccres.bed /AR_ann
 ### 6. Simulation
 Please choose "simulation_ChIA_PET.R" or "simulation_HiChIP.R" script to perform the simulation.
 ```bash
+
 # Parameters for simulation_ChIA_PET.R
 --chr, type="character", List of chromosome names seperated by comma or colon.
 --OutDir, type="character", Output directory.
