@@ -60,6 +60,28 @@ AR_annotation.sh /directory_of_loop_folder /AR_annotation/hg19_ccres.bed /AR_ann
 
 ```
 
+### 6. Simulation
+Please choose "simulation_ChIA_PET.R" or "simulation_HiChIP.R" script to perform the simulation.
+```bash
+# Parameters for simulation_ChIA_PET.R
+--chr, type="character", List of chromosome names seperated by comma or colon.
+--OutDir, type="character", Output directory.
+--ChrSizeFile, type="character", The chromosomes size file for reference genome.
+--ChIPseqFile, type="character", ChIP-seq file, either alignment (BAM) format, or in bedgraph (4 column) format. Default is NULL.
+--TotalRead, type="integer", default=1000000, Total number of reads for the simulated ChIA-PET contacts. Default = 1000000 or 1M.
+--BinSize, type="integer", default=5000. Bin size.
+--param_a, type="integer", default=100. Parameter a.
+
+# Parameters for simulation_HiChIP.R
+--chr, type="character", Comma or colon seperated list of chromosome names for which the simulation would be performed. Default NULL.
+--OutDir, type="character", Base Output directory. Mandatory parameter.--ChrSizeFiletype="character", File containing size of chromosomes for reference genome. Mandatory parameter.
+--ChIPAlignFile, type="character", ChIP-seq file, either alignment (BAM) format, or in bedgraph (4 column) format. Default is NULL. Mandatory parameter.
+--HiCMapFile, type="character", File containing HiC locus pairs and contact counts (7 columns), with respect to the current chromosome.
+--TotalRead, type="integer", default=1000000, Total number of reads for the simulated HiChIP contact matrix. Default = 1000000 or 1M.
+
+```
+
+
 ## Trouble shooting
 * Stdin error<br>
 Please unzip all the annotation/loop files before running the script.
